@@ -10,3 +10,17 @@ services:
             - ./app:/app
         command: >
             sh -c "python manage.py runserver 0.0.0.0:8000"
+        environment: 
+            - DB_HOST=db                        # same as the service db below
+            - DB_NAME=app                       # same as the db service name 
+            - DB_USER=postgres                  # same as the db postgres user
+            - DB_PASS=supersecretpassword       # same as the db postgres password
+        depends_on: 
+            - db    # service app, depends on service db which means (1) db will start before app (2) a network will be createad for db and app to communicate
+
+    db:
+        image: postgres:10-alpine
+        environment: 
+            - POSTGRES_DB=app
+            - POSTGRES_USER=postgres
+            - POSTGRES_PASSWORD=supersecretpassword
